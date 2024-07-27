@@ -1,4 +1,4 @@
-// package com.dkadevlxinptr.lox;
+package com.dkadevlxinptr.lox;
 
 import java.util.List;
 import java.util.Scanner;

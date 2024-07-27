@@ -1,5 +1,5 @@
 # Project
-LxInptr: a interpreter(cum compiler) for Lox language
+LxInptr: an interpreter(cum compiler) for Lox language
 
 ## Folder Structure
 - `src`: the folder to maintain sources
