@@ -34,6 +34,7 @@ class Scanner {
     private void scanToken() {
         char c = advance();
         switch (c) {
+            // Operators and other assignment,conditional etc tokens
             case '(':
                 addToken(LEFT_PAREN);
                 break;
@@ -84,7 +85,8 @@ class Scanner {
                     addToken(SLASH);
                 }
                 break;
-            
+
+            // Spaces
             case ' ':
             case '\r':
             case '\t':
@@ -92,18 +94,67 @@ class Scanner {
             case '\n':
                 line++;
                 break;
+
+            // String literals
+            case '"':
+                string();
+                break;
             default:
-                Lox.error(line, "Unexpected character");
+                if (isDigit(c)) {
+                    number();
+                } else {
+                    Lox.error(line, "Unexpected character.");
+                }
                 break;
         }
     }
+    // Numeric Literal Helper Functions
+    private void number() {
+        while (isDigit(peek()))
+            advance();
 
+        if (peek() == '.' && isDigit(peekNext())) {
+            advance();
+            while (isDigit(peek()))
+                advance();
+        }
+
+        addToken(NUMBER, Double.parseDouble(source.substring(start, current)));
+    }
+
+    private char peekNext() {
+        if (current + 1 >= source.length())
+            return '\0';
+        return source.charAt(current + 1);
+    }
+
+    private boolean isDigit(char c) {
+        return c >= '0' && c <= '9';
+    }
+
+    // String Literal helper Functions
+    private void string() {
+        while (peek() != '"' && !isAtEnd()) {
+            if (peek() == '\n')
+                line++;
+            advance();
+        }
+        if (isAtEnd()) {
+            Lox.error(line, "Unterminated String");
+        }
+        advance();
+        String value = source.substring(start + 1, current - 1);
+        addToken(STRING, value);
+    }
+
+    // Check Current Char
     private char peek() {
         if (isAtEnd())
             return '\0';
         return source.charAt(current);
     }
 
+    // Adv+peek
     private boolean match(char expected) {
         if (!isAtEnd())
             return false;
@@ -113,14 +164,15 @@ class Scanner {
         return true;
     }
 
+    // advance to next char 
     private char advance() {
         return source.charAt(current++);
     }
 
+    // Helper for token addition to list
     private void addToken(TokenType type) {
         addToken(type, null);
     }
-
     private void addToken(TokenType type, Object literal) {
         String text = source.substring(start, current);
         tokens.add(new Token(type, text, literal, line));
