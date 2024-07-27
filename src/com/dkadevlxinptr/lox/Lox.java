@@ -1,7 +1,6 @@
 package com.dkadevlxinptr.lox;
 
 import java.util.List;
-import java.util.Scanner;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
@@ -10,7 +9,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class Lox {
-
     static boolean hadError=false;
     public static void main(String[] args) throws IOException {
         if (args.length > 1) {
@@ -45,7 +43,7 @@ public class Lox {
 
     private static void run(String source) {
         Scanner scanner = new Scanner(source);
-        List<Token> tokens = scanner.scanTokens();
+        List<Token> tokens=scanner.scanTokens();
 
         for (Token token : tokens) {
             System.out.println(token);
